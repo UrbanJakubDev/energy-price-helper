@@ -20,6 +20,7 @@ class Config:
 
     # Settings applicable to all environments
     SECRET_KEY = os.getenv('SECRET_KEY', default='A very terrible secret key.')
+    UPLOAD_FOLDER = '/api/uploads'
     
    #  MAIL_SERVER = 'smtp.googlemail.com'
    #  MAIL_PORT = 465

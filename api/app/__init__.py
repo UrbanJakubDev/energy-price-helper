@@ -51,9 +51,11 @@ def register_blueprints(app):
 
     # Import blueprints
     from app.main import main_blueprint
+    from app.filehandle import file_blueprint
 
     # Register blueprints
     app.register_blueprint(main_blueprint, url_prefix="/api")
+    app.register_blueprint(file_blueprint, url_prefix="/api")
 
 
 def initialize_extensions(app):

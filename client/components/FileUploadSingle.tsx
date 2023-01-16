@@ -1,41 +1,44 @@
-import { ChangeEvent, useState } from 'react';
+import axios from "axios";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 function FileUploadSingle() {
   const [file, setFile] = useState<File>();
 
+  // File change hander
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFile(e.target.files[0]);
     }
   };
 
-  const handleUploadClick = () => {
+  // Upload file handler
+  const handleSubmit = (e: FormEvent) => {
     if (!file) {
       return;
     }
 
-    // 👇 Uploading the file using the fetch API to the server
-    fetch('https://httpbin.org/post', {
-      method: 'POST',
-      body: file,
-      // 👇 Set headers manually for single file upload
+    e.preventDefault();
+    const url = "http://localhost:5000/api/file";
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("fileName", file.name);
+    const config = {
       headers: {
-        'content-type': file.type,
-        'content-length': `${file.size}`, // 👈 Headers need to be a string
+        "content-type": "multipart/form-data",
       },
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.error(err));
+    };
+    axios.post(url, formData, config).then((response) => {
+      console.log(response.data);
+    });
   };
 
   return (
     <div>
-      <input type="file" onChange={handleFileChange} />
-
-      <div>{file && `${file.name} - ${file.type}`}</div>
-
-      <button onClick={handleUploadClick}>Upload</button>
+      <form onSubmit={handleSubmit}>
+        <h1>React File Upload</h1>
+        <input type="file" onChange={handleFileChange} />
+        <button type="submit">Upload</button>
+      </form>
     </div>
   );
 }
