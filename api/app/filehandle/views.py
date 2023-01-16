@@ -32,6 +32,9 @@ class File(Resource):
             return resp
         if file and allowed_file(file.filename):
             filename = file.filename
+
+            print(os.path.join(current_app.config['UPLOAD_FOLDER']))
+
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
             resp = jsonify({'message': 'File successfully uploaded'})
             resp.status_code = 201

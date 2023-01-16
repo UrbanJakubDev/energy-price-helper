@@ -18,7 +18,7 @@ function FileUploadSingle() {
     }
 
     e.preventDefault();
-    const url = "http://localhost:5000/api/file";
+    const url = "http://localhost:8000/api/file";
     const formData = new FormData();
     formData.append("file", file);
     formData.append("fileName", file.name);
