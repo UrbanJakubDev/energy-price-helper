@@ -17,7 +17,7 @@ from flask_cors import CORS
 def create_app():
 
     app = Flask(__name__)
-    CORS(app)
+    # CORS(app)
 
     # Configure the flask app instance
     CONFIG_TYPE = os.getenv('CONFIG_TYPE', default='config.DevelopmentConfig')
