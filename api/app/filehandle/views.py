@@ -12,7 +12,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-class File(Resource):
+class FileResource(Resource):
 
     def get(self):
         return {
@@ -25,25 +25,25 @@ class File(Resource):
             resp = jsonify({'message': 'No file part in the request'})
             resp.status_code = 400
             return resp
+
         file = request.files['file']
+
         if file.filename == '':
             resp = jsonify({'message': 'No file selected for uploading'})
             resp.status_code = 400
             return resp
+
         if file and allowed_file(file.filename):
-            filename = file.filename
-
-            print(os.path.join(current_app.config['UPLOAD_FOLDER']))
-
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(
+                current_app.config['UPLOAD_FOLDER'],'file.xlsx'))
             resp = jsonify({'message': 'File successfully uploaded'})
             resp.status_code = 201
             return resp
+
         else:
             resp = jsonify(
                 {'message': 'Allowed file types are txt, pdf, png, jpg, jpeg, gif'})
             resp.status_code = 400
             return resp
 
-
-api.add_resource(File, '/file')
+api.add_resource(FileResource, '/file')
