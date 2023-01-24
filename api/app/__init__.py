@@ -14,12 +14,11 @@ from flask_cors import CORS
 
 
 ### Application Factory ###
-def create_app():
+def create_app(config_type=None):
 
     app = Flask(__name__)
     # CORS(app)
 
-    # Configure the flask app instance
     CONFIG_TYPE = os.getenv('CONFIG_TYPE', default='config.DevelopmentConfig')
     app.config.from_object(CONFIG_TYPE)
 
@@ -37,6 +36,11 @@ def create_app():
 
     # Register error handlers
     register_error_handlers(app)
+
+    # Check if api/UPLOADS folder exists, if not create it
+    upload_folder = app.config['UPLOAD_FOLDER']
+    if not os.path.exists(upload_folder):
+        os.makedirs(upload_folder)
 
     return app
 

@@ -5,11 +5,15 @@ import FileUploadSingle from '../components/FileUploadSingle'
 import DownloadForm from '../components/DownloadForm'
 import axios from 'axios'
 
+type File = {
+  fileName: string,
+  size: number,
+  type: string
+}
+
 export default function Home() {
   const URL = 'http://localhost:8000/api/main'
-  const [uploadedFile, setUploadedFile] = useState({
-    fileName: '',
-  })
+  const [uploadedFile, setUploadedFile] = useState<File>({ fileName: '', size: 0, type: '' })
 
   // //Axios GET request
   // const getData = () => {
