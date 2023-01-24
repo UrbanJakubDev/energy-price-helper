@@ -2,31 +2,49 @@ import Head from 'next/head'
 import { Inter } from '@next/font/google'
 import { useEffect, useState } from 'react'
 import FileUploadSingle from '../components/FileUploadSingle'
-import FileDownload from '../components/FileDownload'
+import DownloadForm from '../components/DownloadForm'
 import axios from 'axios'
+
+type File = {
+  fileName: string,
+  size: number,
+  type: string
+}
 
 export default function Home() {
   const URL = 'http://localhost:8000/api/main'
-  const [data, setData] = useState(null)
-  const [isLoading, setLoading] = useState(false)
+  const [uploadedFile, setUploadedFile] = useState<File>({ fileName: '', size: 0, type: '' })
 
-  //Axios GET request
-  const getData = () => {
-    axios
-      .get(URL)
-      .then((res: any) => {
-        // handle success
-        setData(res.data.json())
-      })
-      .catch((error: any) => {
-        // handle error
-        console.log(error)
-      })
+  // //Axios GET request
+  // const getData = () => {
+  //   axios
+  //     .get(URL)
+  //     .then((res: any) => {
+  //       // handle success
+  //       console.log(res.data)
+  //     })
+  //     .catch((error: any) => {
+  //       // handle error
+  //       console.log(error)
+  //     })
+  // }
+
+  // Callback function for child component FileUploadSingle to set state of uploadedFile object with data from backend
+  const setUploadedFileState = (fileName: string) => {
+    setUploadedFile({ fileName: fileName })
   }
 
+  // // On component mount get data
+  // useEffect(() => {
+  //   getData()
+  // }, [])
+
+  // Render component with data when uploadedFile state is set
   useEffect(() => {
-    getData()
-  }, [])
+    if (!uploadedFile.fileName) {
+      console.log(uploadedFile)
+    }
+  }, [uploadedFile])
 
   return (
     <>
@@ -36,36 +54,44 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="max-w-xl mx-auto justify-center content-center">
-        <div className="container max-w-7xl self-center mx-auto pt-16">
-          <h1 className="mb-20 text-3xl font-extrabold">
+      <main className="mx-auto max-w-xl content-center justify-center">
+        <div className="container mx-auto max-w-7xl self-center pt-16">
+          <h1 className="mb-20 text-center text-2xl font-extrabold uppercase">
             CEN Zastropovani cen .xlsx -{'>'} .pdf
           </h1>
 
           <div className="wrapper">
             <h2>1.krok - Vzorový soubor</h2>
-            <FileDownload
+            <DownloadForm
               fileName="Simple.pdf"
               label="Stáhnout"
               description="Vzorový soubor pro vyplnění dat"
             />
-            <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+            <hr className="my-8 h-px border-0 bg-gray-200"></hr>
           </div>
 
           <div className="wrapper">
             <h2>2.krok - Nahrát vyplněný soubor</h2>
-            <FileUploadSingle />
-            <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
+            <FileUploadSingle onSuccesfullUpload={setUploadedFileState} />
+            <hr className="my-8 h-px border-0 bg-gray-200"></hr>
           </div>
 
-          <div className="wrapper">
-            <h2>3.krok - Stáhnout vyplněný soubor</h2>
-            <FileDownload
-              fileName="Simple.pdf"
-              label="Download Simple.pdf"
-              description="Stáhněte si vygenerovaný soubor"
-            />
-          </div>
+          {uploadedFile.fileName && (
+            <div className="wrapper">
+              <h2>3.krok - Vygenerovat soubor z poskytnutých dat</h2>
+
+              <div className="border-0 border-gray-800 bg-slate-800 p-2 text-slate-100">
+                <p>Nahraný soubor: {uploadedFile.fileName} </p>
+              </div>
+
+              <DownloadForm
+                fileName="Simple.pdf"
+                label="Download Simple.pdf"
+                description="Stáhněte si vygenerovaný soubor"
+              />
+            </div>
+          )}
+
         </div>
       </main>
     </>
