@@ -35,14 +35,17 @@ class FileResource(Resource):
 
         if file and allowed_file(file.filename):
             file.save(os.path.join(
-                current_app.config['UPLOAD_FOLDER'],'file.xlsx'))
-            resp = jsonify({'message': 'File successfully uploaded'})
+                current_app.config['UPLOAD_FOLDER'], file.filename))
+        
+            # Return response to client with file name and message
+            resp = jsonify({'message': 'File successfully uploaded', 'filename': file.filename})
             resp.status_code = 201
             return resp
 
+
         else:
             resp = jsonify(
-                {'message': 'Allowed file types are txt, pdf, png, jpg, jpeg, gif'})
+                {'message': 'Allowed file types are xls, xlsx, csv'})
             resp.status_code = 400
             return resp
 
