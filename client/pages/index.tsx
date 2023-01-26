@@ -30,9 +30,9 @@ export default function Home() {
   // }
 
   // Callback function for child component FileUploadSingle to set state of uploadedFile object with data from backend
-  const setUploadedFileState = (fileName: string) => {
-    setUploadedFile({ fileName: fileName })
-  }
+  // const setUploadedFileState = (fileName: string) => {
+  //   setUploadedFile({ fileName: fileName })
+  // }
 
   // // On component mount get data
   // useEffect(() => {
@@ -72,11 +72,11 @@ export default function Home() {
 
           <div className="wrapper">
             <h2>2.krok - Nahrát vyplněný soubor</h2>
-            <FileUploadSingle onSuccesfullUpload={setUploadedFileState} />
+            <FileUploadSingle />
             <hr className="my-8 h-px border-0 bg-gray-200"></hr>
           </div>
 
-          {uploadedFile.fileName && (
+          {/* {uploadedFile.fileName && (
             <div className="wrapper">
               <h2>3.krok - Vygenerovat soubor z poskytnutých dat</h2>
 
@@ -90,7 +90,7 @@ export default function Home() {
                 description="Stáhněte si vygenerovaný soubor"
               />
             </div>
-          )}
+          )} */}
 
         </div>
       </main>

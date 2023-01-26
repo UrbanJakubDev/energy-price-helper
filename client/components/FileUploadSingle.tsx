@@ -11,7 +11,7 @@ type Inputs = {
 // Props
 type FileUploadProps = {
   // Callback function to set state of uploadedFile object in parent component
-  onSuccesfullUpload: (fileName: string) => void
+  // onSuccesfullUpload: (fileName: string) => void
 }
 
 // Component
@@ -55,13 +55,20 @@ const FileUploadSingle = (props: FileUploadProps) => {
       .then((response: any) => {
         console.log(response.data)
         console.log(response.status)
+        console.log(response.data.file)
 
         if (response.status === 201) {
           setUploadStatusMessage(response.data.message)
           setUploadStatus(false)
+          let file = response.data.file
 
-          // Set state of uploadedFile object in parent component
-          props.onSuccesfullUpload(response.data.filename)
+          // Automaticaly Donwload file
+          const downloadUrl = window.URL.createObjectURL(new Blob([file]))
+          const link = document.createElement('a')
+          link.href = downloadUrl
+          link.setAttribute('download', 'file.zip') //any other extension
+          document.body.appendChild(link)
+          link.click()
 
           // Reset form
           reset()
@@ -82,15 +89,17 @@ const FileUploadSingle = (props: FileUploadProps) => {
           <input
             type="text"
             placeholder="2090601"
-            {...(register('ico', {required: true, maxLength: 20 }))}
+            {...register('ico', { required: true, maxLength: 20 })}
           />
           {errors.ico && <p className="text-red-500">This field is required</p>}
         </div>
 
         <div className="input-group mb-6">
           <label htmlFor="file">Upload your file...</label>
-          <input type="file" {...(register('file', {required: true}))} />
-          {errors.file && <p className="text-red-500">This field is required</p>}
+          <input type="file" {...register('file', { required: true })} />
+          {errors.file && (
+            <p className="text-red-500">This field is required</p>
+          )}
         </div>
 
         <div className="container mt-3 text-right">
