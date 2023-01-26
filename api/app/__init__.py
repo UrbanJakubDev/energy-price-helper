@@ -7,6 +7,8 @@ for different environments based on the value of the CONFIG_TYPE environment var
 import os
 from flask import Flask
 from flask_cors import CORS
+
+from app.utils import mkdir_if_not
 # from flask_mail import Mail
 
 # ### Flask extension objects instantiation ###
@@ -38,9 +40,8 @@ def create_app(config_type=None):
     register_error_handlers(app)
 
     # Check if api/UPLOADS folder exists, if not create it
-    upload_folder = app.config['UPLOAD_FOLDER']
-    if not os.path.exists(upload_folder):
-        os.makedirs(upload_folder)
+    mkdir_if_not(app.config['TMP_FOLDER'])
+    
 
     return app
 
