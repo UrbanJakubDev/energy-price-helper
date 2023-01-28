@@ -1,32 +1,48 @@
-# from api.app.filehandle.services import FileProcessor
+import time
 from . import file_blueprint
 import os
 from flask_restful import Api, Resource
-from flask import Flask, request, jsonify, current_app
+from flask import Flask, request, jsonify
 
+# Import from services.py
+from app.filehandle.services import StatementGenerator
+
+
+# Initialize blueprint
 api = Api(file_blueprint)
 
+
+# Allowed file extensions array
 ALLOWED_EXTENSIONS = set(['xlsx'])
 
+
 # Check if file extension is allowed
-
-
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+# RREST API resource class
 class FileResource(Resource):
 
+    # TODO: only for testing
     def get(self):
 
-        # processor = FileProcessor("file.xlsx")
-        # processor.read_xlsx()
-        # processor.validate()
-        # processor.calculations()
-        # processor.process_rows("template.docx")
+        # Get path to file
+        current_pah = os.path.dirname(os.path.abspath(__file__))
+
+        # Get path to parent directory
+        parent_dir = os.path.dirname(current_pah)
+
+
+        current_path_rel = os.path.dirname(os.path.realpath(__file__))
+        for k in range(1):
+            current_path_rel = os.path.dirname(current_path_rel)
 
         return {
-            'message': 'Here is you file..'
+            'message': 'Here is you file..',
+            'path': current_pah,
+            'parent': parent_dir,
+            'rel': current_path_rel
         }
 
     def post(self):
@@ -43,13 +59,20 @@ class FileResource(Resource):
             resp.status_code = 400
             return resp
 
+        # If validation is successful, save the file
         if file and allowed_file(file.filename):
-            file.save(os.path.join(
-                current_app.config['UPLOAD_FOLDER'], file.filename))
+            # file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], file.filename))
 
-            # Return response to client with file name and message
-            resp = jsonify(
-                {'message': 'File successfully uploaded', 'filename': file.filename})
+            # Start timer
+            start = time.time()
+            proccesor = StatementGenerator(file)
+            print(proccesor.tmp_directory)
+            output = proccesor.generate_statements()
+            end = time.time()
+
+            print('Time taken: ' + str(end - start))
+
+            resp = jsonify({'message': 'File successfully uploaded'})
             resp.status_code = 201
             return resp
 

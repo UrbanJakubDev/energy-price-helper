@@ -1,6 +1,8 @@
 aniso8601==9.0.1
+appscript==1.2.2
 click==7.1.2
 colorama==0.4.6
+docx2pdf==0.1.8
 et-xmlfile==1.1.0
 Flask==1.1.4
 Flask-Cors==3.0.10
@@ -20,4 +22,5 @@ python-dotenv==0.21.0
 pytz==2022.7
 six==1.16.0
 SQLAlchemy==1.4.46
+tqdm==4.64.1
 Werkzeug==1.0.1
