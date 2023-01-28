@@ -10,6 +10,7 @@ from app.utils import docx_replace_regex
 from docx2pdf import convert
 
 
+
 # Get parent directory of current file
 current_path_rel = os.path.dirname(os.path.realpath(__file__))
 for k in range(2):
@@ -67,8 +68,6 @@ class StatementGenerator():
         for file in os.listdir(self.tmp_directory):
             if file.endswith('.docx'):
                 convert(self.tmp_directory + file, self.tmp_directory + file.replace('.docx', '.pdf'))
-        
-        
 
         respo = self.storage.zip_directory(directory_path=self.tmp_directory, zip_file_name='Statements.zip')
 
