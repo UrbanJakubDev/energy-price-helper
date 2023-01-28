@@ -7,7 +7,16 @@ import os
 import sys
 
 from app.utils import docx_replace_regex
+from docx2pdf import convert
 
+
+# Get parent directory of current file
+current_path_rel = os.path.dirname(os.path.realpath(__file__))
+for k in range(2):
+    current_path_rel = os.path.dirname(current_path_rel)
+
+# Add parent directory to path
+sys.path.append(current_path_rel)
 
 
 
@@ -26,9 +35,11 @@ class StatementGenerator():
         self.validated_file = None
 
         # TODO: Fix template path
-        self.tmp_directory = 'api/TMP_FOLDER/'
+        self.current_path_rel = current_path_rel
+        self.tmp_directory =  self.current_path_rel +'/TMP_FOLDER/'
         self.template_docx = f'{self.tmp_directory}Statement_template.docx'
         self.storage = StatementStorage()
+        
 
     # Generate statements
 
@@ -47,13 +58,18 @@ class StatementGenerator():
 
             # Generate statement
             statement = self.generate_statement_file(row)
+            # Convert statement to pdf
 
-            print('Statement generated: ' + str(statement))
+            # Save statement to directory
+            statement.save(self.tmp_directory + str(row['id']) + '.docx')
+           
 
-            # Add statement to storage
-            self.storage.add_to_storage(statement, row['id'])
+        for file in os.listdir(self.tmp_directory):
+            if file.endswith('.docx'):
+                convert(self.tmp_directory + file, self.tmp_directory + file.replace('.docx', '.pdf'))
+        
+        
 
-        self.storage.dump_from_storage(to_dir=self.tmp_directory)
         respo = self.storage.zip_directory(directory_path=self.tmp_directory, zip_file_name='Statements.zip')
 
         # Return zip file from storage
@@ -82,9 +98,6 @@ class StatementGenerator():
         docx_filler.setRegexArray(regex_array)
 
         generated_file = docx_filler.replace_placeholders()
-
-        # TODO: Convert to PDF
-
         return generated_file
 
 
@@ -186,7 +199,43 @@ class DocxFiller():
 
         return document
 
-    # Covert docx to pdf
 
-    def convert_docx_to_pdf(self, docx_file):
-        pass
+# Class for file
+class File():
+
+    def __init__(self, file):
+        self.file = file
+        self.file_name = self.file.filename
+        self.file_extension = self.file_name.split('.')[-1]
+        self.file_path = None
+
+    # Save file to folder
+    def save_file(self, to_dir):
+        self.file_path = to_dir + self.file_name + '.' + self.file_extension
+        self.file.save(self.file_path)
+
+    # Delete file from folder
+    def delete_file(self):
+        os.remove(self.file_path)
+
+    # Get file path
+    def get_file_path(self):
+        return self.file_path
+
+    # Get file name
+    def get_file_name(self):
+        return self.file_name
+
+    # Get file extension
+    def get_file_extension(self):
+        return self.file_extension
+
+    # Get file
+    def get_file(self):
+        return self.file
+
+    # Covert file to pdf
+    def convert_to_pdf(self):
+
+        if self.file_extension == 'docx':
+            convert(self.file_path, self.file_path + '.pdf')
