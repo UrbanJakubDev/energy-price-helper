@@ -65,13 +65,18 @@ class FileResource(Resource):
             start = time.time()
             proccesor = StatementGenerator(file)
             output_zip_file = proccesor.generate_statements()
+       
+
             end = time.time()
 
             print('Time taken: ' + str(end - start))
 
 
             # Return 201 and message
-            resp = jsonify({'message': 'File successfully uploaded', 'fileName': output_zip_file})
+            resp = jsonify({
+                'message': 'File successfully uploaded', 
+                'file': output_zip_file, 
+                'fileName': proccesor.zip_file_name})
             resp.status_code = 201
             return resp
 

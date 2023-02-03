@@ -35,7 +35,8 @@ class StatementGenerator():
         self.current_path_rel = current_path_rel
         self.tmp_directory = self.current_path_rel + '/TMP_FOLDER/'
         self.template_docx = f'{self.tmp_directory}Statement_template.docx'
-        self.zip_fil_name = f'{self.tmp_directory}Statements.zip'
+        self.zip_file_name = 'Statements.zip'
+        self.zip_file_path = self.tmp_directory + self.zip_file_name
 
     # Generate statements
 
@@ -63,10 +64,10 @@ class StatementGenerator():
             # Save statement to directory
             statement.save(self.tmp_directory + str(row['eic']) + '.docx')
 
-        self.zip_directory(directory_path=self.tmp_directory, zip_file_name= self.zip_fil_name)
+        self.zip_directory(directory_path=self.tmp_directory, zip_file_name= self.zip_file_path)
 
         # return response 201 with message 'File uploaded successfully'
-        return self.zip_fil_name
+        return self.zip_file_path
 
 
     # Generate single statement file

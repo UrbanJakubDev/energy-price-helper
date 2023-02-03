@@ -28,7 +28,7 @@ export default function Home() {
         console.log(res.data)
       })
       .catch((error: any) => {
-        // handle error
+        // handle errorP
         console.log(error)
       })
   }
