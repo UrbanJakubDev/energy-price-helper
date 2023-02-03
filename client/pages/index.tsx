@@ -7,6 +7,7 @@ import axios from 'axios'
 
 type File = {
   fileName: string
+  filePath: string
   size: number
   type: string
 }
@@ -15,6 +16,7 @@ export default function Home() {
   const URL = 'http://localhost:8000/api/main'
   const [uploadedFile, setUploadedFile] = useState<File>({
     fileName: '',
+    filePath: '',
     size: 0,
     type: '',
   })
@@ -89,8 +91,8 @@ export default function Home() {
               </div>
 
               <DownloadForm
-                fileName="Simple.pdf"
-                label="Download Simple.pdf"
+                fileName={uploadedFile.filePath}
+                label={uploadedFile.fileName? "Stáhnout" : "Nahrajte soubor"}
                 description="Stáhněte si vygenerovaný soubor"
               />
             </div>
