@@ -2,7 +2,7 @@ import time
 from . import file_blueprint
 import os
 from flask_restful import Api, Resource
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response
 
 # Import from services.py
 from app.filehandle.services import StatementGenerator
@@ -33,7 +33,6 @@ class FileResource(Resource):
         # Get path to parent directory
         parent_dir = os.path.dirname(current_pah)
 
-
         current_path_rel = os.path.dirname(os.path.realpath(__file__))
         for k in range(1):
             current_path_rel = os.path.dirname(current_path_rel)
@@ -61,18 +60,18 @@ class FileResource(Resource):
 
         # If validation is successful, save the file
         if file and allowed_file(file.filename):
-            # file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], file.filename))
 
             # Start timer
             start = time.time()
             proccesor = StatementGenerator(file)
-            print(proccesor.tmp_directory)
-            output = proccesor.generate_statements()
+            output_zip_file = proccesor.generate_statements()
             end = time.time()
 
             print('Time taken: ' + str(end - start))
 
-            resp = jsonify({'message': 'File successfully uploaded'})
+
+            # Return 201 and message
+            resp = jsonify({'message': 'File successfully uploaded', 'fileName': output_zip_file})
             resp.status_code = 201
             return resp
 

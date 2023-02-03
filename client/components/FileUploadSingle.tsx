@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { saveAs } from 'file-saver'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
@@ -11,7 +12,7 @@ type Inputs = {
 // Props
 type FileUploadProps = {
   // Callback function to set state of uploadedFile object in parent component
-  // onSuccesfullUpload: (fileName: string) => void
+  onSuccesfullUpload: (fileName: string) => void
 }
 
 // Component
@@ -32,15 +33,16 @@ const FileUploadSingle = (props: FileUploadProps) => {
 
   // File handler
   const onSubmit: SubmitHandler<Inputs> = (data) => {
+
+    // Set upload status and message
+    setUploadStatus(true)
+    setUploadStatusMessage('Uploading...')
+
     // Axios post request to backend
     const formData = new FormData()
     formData.append('file', data.file[0])
     formData.append('fileName', data.file[0].name)
     formData.append('ico', data.ico)
-
-    // Set upload status and message
-    setUploadStatus(true)
-    setUploadStatusMessage('Uploading...')
 
     // Axios post request
     const url = 'http://localhost:8000/api/file'
@@ -49,28 +51,13 @@ const FileUploadSingle = (props: FileUploadProps) => {
         'content-type': 'multipart/form-data',
       },
     }
-
     axios
       .post(url, formData, config)
       .then((response: any) => {
-        console.log(response.data)
-        console.log(response.status)
-        console.log(response.data.file)
-
         if (response.status === 201) {
           setUploadStatusMessage(response.data.message)
           setUploadStatus(false)
-          let file = response.data.file
-
-          // Automaticaly Donwload file
-          const downloadUrl = window.URL.createObjectURL(new Blob([file]))
-          const link = document.createElement('a')
-          link.href = downloadUrl
-          link.setAttribute('download', 'file.zip') //any other extension
-          document.body.appendChild(link)
-          link.click()
-
-          // Reset form
+          props.onSuccesfullUpload(response.data.fileName)
           reset()
         }
       })
@@ -81,6 +68,8 @@ const FileUploadSingle = (props: FileUploadProps) => {
       })
   }
 
+
+
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -89,7 +78,7 @@ const FileUploadSingle = (props: FileUploadProps) => {
           <input
             type="text"
             placeholder="2090601"
-            {...register('ico', { required: true, maxLength: 20 })}
+            {...register('ico', { required: false, maxLength: 20 })}
           />
           {errors.ico && <p className="text-red-500">This field is required</p>}
         </div>
