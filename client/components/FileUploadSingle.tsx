@@ -36,7 +36,7 @@ const FileUploadSingle = (props: FileUploadProps) => {
 
     // Set upload status and message
     setUploadStatus(true)
-    setUploadStatusMessage('Uploading...')
+    setUploadStatusMessage('Generuji Soubory...')
 
     // Axios post request to backend
     const formData = new FormData()

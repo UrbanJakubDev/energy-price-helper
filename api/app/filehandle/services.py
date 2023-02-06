@@ -1,5 +1,7 @@
+
 import io
 import re
+from datetime import datetime
 import zipfile
 import pandas as pd
 import docx
@@ -32,11 +34,23 @@ class StatementGenerator():
         self.validated_file = None
 
         # TODO: Fix template path
-        self.current_path_rel = current_path_rel
-        self.tmp_directory = self.current_path_rel + '/TMP_FOLDER/'
-        self.template_docx = f'{self.tmp_directory}Statement_template.docx'
-        self.zip_file_name = 'Statements.zip'
-        self.zip_file_path = self.tmp_directory + self.zip_file_name
+        self.tmp_directory = current_path_rel + '/TMP_FOLDER/'
+        self.zip_file_name = ''
+        #self.zip_file_path = self.tmp_directory + self.zip_file_name
+
+    # Set statemnet_template file name
+    @staticmethod
+    def set_template_file_name(name, type):
+        return name + '_' + type + '.docx'
+
+    # Set statemnet zip file namw
+    @staticmethod
+    def set_zip_file_name(name):
+
+        # Actual datetime
+        dt = datetime.now()
+        dt = dt.strftime("%d-%m-%Y_%H-%M")
+        return name + '_' + dt + '.zip'
 
     # Generate statements
 
@@ -44,6 +58,8 @@ class StatementGenerator():
 
         # Clear TMP folder
         self.clear_storage(self.tmp_directory)
+
+        self.zip_file_name = self.set_zip_file_name('Statements')
 
         # Process input file and get validated data
         fp = InputFileProcessor(self.input_file)
@@ -64,11 +80,12 @@ class StatementGenerator():
             # Save statement to directory
             statement.save(self.tmp_directory + str(row['eic']) + '.docx')
 
-        self.zip_directory(directory_path=self.tmp_directory, zip_file_name= self.zip_file_path)
+        # Zip directory
+        zip_file_path = self.tmp_directory + self.set_zip_file_name('Statements')
+        self.zip_directory(directory_path=self.tmp_directory,zip_file_name=zip_file_path)
 
         # return response 201 with message 'File uploaded successfully'
-        return self.zip_file_path
-
+        return zip_file_path
 
     # Generate single statement file
 
@@ -113,8 +130,8 @@ class StatementGenerator():
             '#_calc_e': str(row['calculation_e'])
         }
 
-        # Initialize DocxFiller class
-        docx_filler = DocxFiller(self.template_docx)
+        # Create docx filler object
+        docx_filler = DocxFiller(self.tmp_directory+self.set_template_file_name('ST_temp', row['type']))
 
         # Set regex array
         docx_filler.setRegexArray(regex_array)
@@ -130,25 +147,26 @@ class StatementGenerator():
 
         # Iterate over all the files in directory
         for folder, subfolders, files in os.walk(directory_path):
-                
-                for file in files:
-                    # Create complete filepath of file in directory
-                    file_path = os.path.join(folder, file)
-                    if file.endswith('.docx') and '_template' not in file:
-    
-                        # Add file to zip file
-                        zip_file.write(file_path, file, compress_type=zipfile.ZIP_DEFLATED)
+
+            for file in files:
+                # Create complete filepath of file in directory
+                file_path = os.path.join(folder, file)
+                if file.endswith('.docx') and '_temp' not in file:
+
+                    # Add file to zip file
+                    zip_file.write(file_path, file,
+                                   compress_type=zipfile.ZIP_DEFLATED)
 
         # Close the Zip File
         zip_file.close()
 
-
     # Clear storage folder and array
+
     def clear_storage(self, dir):
 
         # Delete all files in folder
         for file in os.listdir(dir):
-            if file.endswith('.docx') and '_template' not in file:
+            if file.endswith('.docx') and '_temp' not in file:
                 os.remove(dir + file)
 
 
@@ -156,7 +174,7 @@ class InputFileProcessor:
     def __init__(self, source_file):
         self.sf_sheetname = 'export'
         self.sf_header = 3  # Row number for header
-        self.sf_usecols = 'A:K'  # Columns to use
+        self.sf_usecols = 'A:L'  # Columns to use
 
         self.input_dataframe = pd.read_excel(
             source_file,
@@ -171,6 +189,7 @@ class InputFileProcessor:
         """Validates the file"""
         # Add validation logic here
         print('Validating file')
+        print(self.input_dataframe)
 
     # Calculations on dataframe section
 
@@ -210,37 +229,53 @@ class InputFileProcessor:
         self.output_dataframe['statement_9_b'] = self.input_dataframe['cons_g_om']
         self.output_dataframe['statement_10_b'] = self.input_dataframe['gen_e_kj']
 
-
         # Calculations for base columns
         self.output_dataframe['statement_2_b'] = 0
-        self.output_dataframe['statement_3_b'] = self.output_dataframe['statement_1_b'] - self.output_dataframe['statement_5_b']
-        self.output_dataframe['statement_4_b'] = self.output_dataframe['statement_1_b'] - self.output_dataframe['statement_2_b'] - self.output_dataframe['statement_3_b'] - self.output_dataframe['statement_5_b']
+        self.output_dataframe['statement_3_b'] = self.output_dataframe['statement_1_b'] - \
+            self.output_dataframe['statement_5_b']
+        self.output_dataframe['statement_4_b'] = self.output_dataframe['statement_1_b'] - \
+            self.output_dataframe['statement_2_b'] - \
+            self.output_dataframe['statement_3_b'] - \
+            self.output_dataframe['statement_5_b']
         self.output_dataframe['statement_6_b'] = self.output_dataframe['statement_5_b']
-        self.output_dataframe['statement_7_b'] = self.output_dataframe['statement_5_b'] - self.output_dataframe['statement_6_b']
+        self.output_dataframe['statement_7_b'] = self.output_dataframe['statement_5_b'] - \
+            self.output_dataframe['statement_6_b']
         self.output_dataframe['statement_8_b'] = 0
         self.output_dataframe['statement_11_b'] = 0
         self.output_dataframe['statement_12_b'] = self.output_dataframe['statement_10_b']
         self.output_dataframe['statement_13_b'] = 0
 
-
         # Convert base columns to mwh
-        self.output_dataframe['statement_1_c'] = self.output_dataframe['statement_1_b'].apply(self.gj_to_mwh)
-        self.output_dataframe['statement_2_c'] = self.output_dataframe['statement_2_b'].apply(self.gj_to_mwh)
-        self.output_dataframe['statement_3_c'] = self.output_dataframe['statement_3_b'].apply(self.gj_to_mwh)
-        self.output_dataframe['statement_4_c'] = self.output_dataframe['statement_4_b'].apply(self.gj_to_mwh)
-        self.output_dataframe['statement_5_c'] = self.output_dataframe['statement_5_b'].apply(self.gj_to_mwh)
-        self.output_dataframe['statement_6_c'] = self.output_dataframe['statement_6_b'].apply(self.gj_to_mwh)
-        self.output_dataframe['statement_7_c'] = self.output_dataframe['statement_7_b'].apply(self.gj_to_mwh)
+        self.output_dataframe['statement_1_c'] = self.output_dataframe['statement_1_b'].apply(
+            self.gj_to_mwh)
+        self.output_dataframe['statement_2_c'] = self.output_dataframe['statement_2_b'].apply(
+            self.gj_to_mwh)
+        self.output_dataframe['statement_3_c'] = self.output_dataframe['statement_3_b'].apply(
+            self.gj_to_mwh)
+        self.output_dataframe['statement_4_c'] = self.output_dataframe['statement_4_b'].apply(
+            self.gj_to_mwh)
+        self.output_dataframe['statement_5_c'] = self.output_dataframe['statement_5_b'].apply(
+            self.gj_to_mwh)
+        self.output_dataframe['statement_6_c'] = self.output_dataframe['statement_6_b'].apply(
+            self.gj_to_mwh)
+        self.output_dataframe['statement_7_c'] = self.output_dataframe['statement_7_b'].apply(
+            self.gj_to_mwh)
 
-        self.output_dataframe['statement_8_c'] = (self.output_dataframe['statement_8_b']*self.input_dataframe['combustion_heat']).apply(self.m3_to_mwh)
-        self.output_dataframe['statement_9_c'] = (self.output_dataframe['statement_9_b']*self.input_dataframe['combustion_heat']).apply(self.m3_to_mwh)
-        self.output_dataframe['statement_10_c'] = self.output_dataframe['statement_10_b'].apply(self.kwh_to_mwh)
+        self.output_dataframe['statement_8_c'] = (
+            self.output_dataframe['statement_8_b']*self.input_dataframe['combustion_heat']).apply(self.m3_to_mwh)
+        self.output_dataframe['statement_9_c'] = (
+            self.output_dataframe['statement_9_b']*self.input_dataframe['combustion_heat']).apply(self.m3_to_mwh)
+        self.output_dataframe['statement_10_c'] = self.output_dataframe['statement_10_b'].apply(
+            self.kwh_to_mwh)
 
-        self.output_dataframe['statement_11_c'] = self.output_dataframe['statement_11_b'].apply(self.kwh_to_mwh)
-        self.output_dataframe['statement_12_c'] = self.output_dataframe['statement_12_b'].apply(self.kwh_to_mwh)
-        self.output_dataframe['statement_13_c'] = self.output_dataframe['statement_13_b'].apply(self.kwh_to_mwh)
+        self.output_dataframe['statement_11_c'] = self.output_dataframe['statement_11_b'].apply(
+            self.kwh_to_mwh)
+        self.output_dataframe['statement_12_c'] = self.output_dataframe['statement_12_b'].apply(
+            self.kwh_to_mwh)
+        self.output_dataframe['statement_13_c'] = self.output_dataframe['statement_13_b'].apply(
+            self.kwh_to_mwh)
 
-        # Calculations 
+        # Calculations
         self.output_dataframe['calculation_c'] = self.calculation_c(
             num1=self.output_dataframe['statement_1_c'],
             num5=self.output_dataframe['statement_5_c'],
@@ -261,16 +296,17 @@ class InputFileProcessor:
             num13=self.output_dataframe['statement_13_c']
         )
 
-        self.output_dataframe['calculation_e'] = 100 - self.output_dataframe['calculation_c'] - self.output_dataframe['calculation_d']
+        self.output_dataframe['calculation_e'] = 100 - \
+            self.output_dataframe['calculation_c'] - \
+            self.output_dataframe['calculation_d']
 
         # Questions
         self.output_dataframe['q1'] = self.input_dataframe['q1']
         self.output_dataframe['q2'] = self.input_dataframe['q2']
         self.output_dataframe['q3'] = self.input_dataframe['q3']
+        self.output_dataframe['type'] = self.input_dataframe['type']
 
         self.output_dataframe = self.output_dataframe.round(2)
-
-
 
     def get_validated_data(self):
         """Iterates through the rows of the dataframe and generates a PDF for each row"""
@@ -311,4 +347,3 @@ class DocxFiller():
             docx_replace_regex(document, key, item)
 
         return document
-
