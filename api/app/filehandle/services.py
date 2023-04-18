@@ -9,7 +9,9 @@ import os
 import sys
 
 from app.utils import docx_replace_regex
-
+from docx2pdf import convert
+import win32com.client
+import pythoncom
 
 # Get parent directory of current file
 current_path_rel = os.path.dirname(os.path.realpath(__file__))
@@ -78,11 +80,20 @@ class StatementGenerator():
             # Convert statement to pdf
 
             # Save statement to directory
-            statement.save(self.tmp_directory + str(row['eic']) + '.docx')
+            file_path = self.tmp_directory + str(row['eic']) + '.docx'
+            statement.save(file_path)
+
+            # Convert docx to pdf
+            word = win32com.client.Dispatch("Word.Application",pythoncom.CoInitialize())
+            doc = word.Documents.Open(file_path)
+            doc.SaveAs(file_path.replace('.docx', '.pdf'), FileFormat=17)
+            doc.Close()
 
         # Zip directory
         zip_file_path = self.tmp_directory + self.set_zip_file_name('Statements')
         self.zip_directory(directory_path=self.tmp_directory,zip_file_name=zip_file_path)
+
+        self.clear_storage(self.tmp_directory)
 
         # return response 201 with message 'File uploaded successfully'
         return zip_file_path
@@ -170,6 +181,25 @@ class StatementGenerator():
                 os.remove(dir + file)
 
 
+    # Convert docx to pdf
+    def convert_docx_to_pdf(self, directory_path):
+            
+            # Iterate over all the files in directory
+            for folder, subfolders, files in os.walk(directory_path):
+    
+                for file in files:
+                    # Create complete filepath of file in directory
+                    file_path = os.path.join(folder, file)
+                    if file.endswith('.docx') and '_temp' not in file:
+    
+                        # Convert docx to pdf
+                        word = win32com.client.Dispatch("Excel.Application",pythoncom.CoInitialize())
+                        doc = word.Documents.Open(file_path, ReadOnly=1)
+                        doc.SaveAs(file_path.replace('.docx', '.pdf'), FileFormat=17)
+                        doc.Close()
+
+    
+
 class InputFileProcessor:
     def __init__(self, source_file):
         self.sf_sheetname = 'export'
@@ -231,15 +261,19 @@ class InputFileProcessor:
 
         # Calculations for base columns
         self.output_dataframe['statement_2_b'] = 0
-        self.output_dataframe['statement_3_b'] = self.output_dataframe['statement_1_b'] - \
-            self.output_dataframe['statement_5_b']
+        self.output_dataframe['statement_3_b'] = self.output_dataframe['statement_1_b'] - self.output_dataframe['statement_5_b']
         self.output_dataframe['statement_4_b'] = self.output_dataframe['statement_1_b'] - \
             self.output_dataframe['statement_2_b'] - \
             self.output_dataframe['statement_3_b'] - \
             self.output_dataframe['statement_5_b']
-        self.output_dataframe['statement_6_b'] = self.output_dataframe['statement_5_b']
-        self.output_dataframe['statement_7_b'] = self.output_dataframe['statement_5_b'] - \
-            self.output_dataframe['statement_6_b']
+        
+
+        self.output_dataframe.loc[self.input_dataframe['q3'] == 'ANO', 'statement_6_b'] = self.output_dataframe['statement_5_b']
+        self.output_dataframe.loc[self.input_dataframe['q3'] == 'NE', 'statement_6_b'] = 0
+        self.output_dataframe.loc[self.input_dataframe['q3'] == 'NE', 'statement_7_b'] = self.output_dataframe['statement_5_b']
+        self.output_dataframe.loc[self.input_dataframe['q3'] == 'ANO', 'statement_7_b'] = 0
+
+
         self.output_dataframe['statement_8_b'] = 0
         self.output_dataframe['statement_11_b'] = 0
         self.output_dataframe['statement_12_b'] = self.output_dataframe['statement_10_b']
@@ -307,6 +341,8 @@ class InputFileProcessor:
         self.output_dataframe['type'] = self.input_dataframe['type']
 
         self.output_dataframe = self.output_dataframe.round(2)
+
+        self.output_dataframe.fillna(0, inplace=True)
 
     def get_validated_data(self):
         """Iterates through the rows of the dataframe and generates a PDF for each row"""

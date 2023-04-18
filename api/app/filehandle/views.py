@@ -26,23 +26,30 @@ class FileResource(Resource):
 
     # TODO: only for testing
     def get(self):
+        # # Get path to file
+        # current_pah = os.path.dirname(os.path.abspath(__file__))
 
-        # Get path to file
-        current_pah = os.path.dirname(os.path.abspath(__file__))
+        # # Get path to parent directory
+        # parent_dir = os.path.dirname(current_pah)
 
-        # Get path to parent directory
-        parent_dir = os.path.dirname(current_pah)
+        # current_path_rel = os.path.dirname(os.path.realpath(__file__))
+        # for k in range(1):
+        #     current_path_rel = os.path.dirname(current_path_rel)
 
-        current_path_rel = os.path.dirname(os.path.realpath(__file__))
-        for k in range(1):
-            current_path_rel = os.path.dirname(current_path_rel)
-
-        return {
-            'message': 'Here is you file..',
-            'path': current_pah,
-            'parent': parent_dir,
-            'rel': current_path_rel
-        }
+        # return {
+        #     'message': 'Here is you file..',
+        #     'path': current_pah,
+        #     'parent': parent_dir,
+        #     'rel': current_path_rel
+        # }
+        file = "D:\stropovani_cen_data.xlsx"
+        start = time.time()
+        proccesor = StatementGenerator(file)
+        output_zip_file = proccesor.generate_statements()
+        end = time.time()
+        print('Time taken: ' + str(end - start))
+        
+        
 
     def post(self):
         # check if the post request has the file part
@@ -65,17 +72,15 @@ class FileResource(Resource):
             start = time.time()
             proccesor = StatementGenerator(file)
             output_zip_file = proccesor.generate_statements()
-       
 
             end = time.time()
 
             print('Time taken: ' + str(end - start))
 
-
             # Return 201 and message
             resp = jsonify({
-                'message': 'File successfully uploaded', 
-                'file': output_zip_file, 
+                'message': 'File successfully uploaded',
+                'file': output_zip_file,
                 'fileName': proccesor.zip_file_name})
             resp.status_code = 201
             return resp

@@ -1,0 +1,202 @@
+2023-01-28 18:21:20,827 ERROR: Exception on /api/file [POST] [in app.py: 1891]
+Traceback (most recent call last):
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask_restful\__init__.py", line 467, in wrapper
+    resp = resource(*args, **kwargs)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\views.py", line 89, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask_restful\__init__.py", line 582, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "D:\_Coding\_Work\energy-price-helper\api\app\filehandle\views.py", line 47, in post
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\werkzeug\datastructures.py", line 3066, in save
+    dst = open(dst, "wb")
+FileNotFoundError: [Errno 2] No such file or directory: 'D:\\_Coding\\_Work\\energy-price-helper\\api/UPLOAD_FOLDER\\test_xlsx_strop.xlsx'
+2023-01-28 18:21:33,184 ERROR: Exception on /api/file [POST] [in app.py: 1891]
+Traceback (most recent call last):
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask_restful\__init__.py", line 467, in wrapper
+    resp = resource(*args, **kwargs)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\views.py", line 89, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask_restful\__init__.py", line 582, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "D:\_Coding\_Work\energy-price-helper\api\app\filehandle\views.py", line 47, in post
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\werkzeug\datastructures.py", line 3066, in save
+    dst = open(dst, "wb")
+FileNotFoundError: [Errno 2] No such file or directory: 'D:\\_Coding\\_Work\\energy-price-helper\\api/UPLOAD_FOLDER\\test_xlsx_strop.xlsx'
+2023-01-28 18:25:02,242 ERROR: Exception on /api/file [POST] [in app.py: 1891]
+Traceback (most recent call last):
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\dynamic.py", line 86, in _GetGoodDispatch
+    IDispatch = pythoncom.connect(IDispatch)
+pywintypes.com_error: (-2147221008, 'Nebyla volána procedura CoInitialize.', None, None)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask_restful\__init__.py", line 467, in wrapper
+    resp = resource(*args, **kwargs)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\views.py", line 89, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask_restful\__init__.py", line 582, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "D:\_Coding\_Work\energy-price-helper\api\app\filehandle\views.py", line 70, in post
+    output = proccesor.generate_statements()
+  File "D:\_Coding\_Work\energy-price-helper\api\app\filehandle\services.py", line 70, in generate_statements
+    convert(self.tmp_directory + file, self.tmp_directory + file.replace('.docx', '.pdf'))
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\docx2pdf\__init__.py", line 106, in convert
+    return windows(paths, keep_active)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\docx2pdf\__init__.py", line 19, in windows
+    word = win32com.client.Dispatch("Word.Application")
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\__init__.py", line 117, in Dispatch
+    dispatch, userName = dynamic._GetGoodDispatchAndUserName(dispatch, userName, clsctx)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\dynamic.py", line 106, in _GetGoodDispatchAndUserName
+    return (_GetGoodDispatch(IDispatch, clsctx), userName)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\dynamic.py", line 88, in _GetGoodDispatch
+    IDispatch = pythoncom.CoCreateInstance(
+pywintypes.com_error: (-2147221008, 'Nebyla volána procedura CoInitialize.', None, None)
+2023-01-28 18:26:39,740 ERROR: Exception on /api/file [POST] [in app.py: 1891]
+Traceback (most recent call last):
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\dynamic.py", line 86, in _GetGoodDispatch
+    IDispatch = pythoncom.connect(IDispatch)
+pywintypes.com_error: (-2147221008, 'Nebyla volána procedura CoInitialize.', None, None)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask_restful\__init__.py", line 467, in wrapper
+    resp = resource(*args, **kwargs)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\views.py", line 89, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask_restful\__init__.py", line 582, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "D:\_Coding\_Work\energy-price-helper\api\app\filehandle\views.py", line 70, in post
+    output = proccesor.generate_statements()
+  File "D:\_Coding\_Work\energy-price-helper\api\app\filehandle\services.py", line 71, in generate_statements
+    convert(self.tmp_directory + file, self.tmp_directory + file.replace('.docx', '.pdf'))
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\docx2pdf\__init__.py", line 106, in convert
+    return windows(paths, keep_active)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\docx2pdf\__init__.py", line 19, in windows
+    word = win32com.client.Dispatch("Word.Application")
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\__init__.py", line 117, in Dispatch
+    dispatch, userName = dynamic._GetGoodDispatchAndUserName(dispatch, userName, clsctx)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\dynamic.py", line 106, in _GetGoodDispatchAndUserName
+    return (_GetGoodDispatch(IDispatch, clsctx), userName)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\dynamic.py", line 88, in _GetGoodDispatch
+    IDispatch = pythoncom.CoCreateInstance(
+pywintypes.com_error: (-2147221008, 'Nebyla volána procedura CoInitialize.', None, None)
+2023-01-28 18:28:00,008 ERROR: Exception on /api/file [POST] [in app.py: 1891]
+Traceback (most recent call last):
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\dynamic.py", line 86, in _GetGoodDispatch
+    IDispatch = pythoncom.connect(IDispatch)
+pywintypes.com_error: (-2147221008, 'Nebyla volána procedura CoInitialize.', None, None)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask_restful\__init__.py", line 467, in wrapper
+    resp = resource(*args, **kwargs)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\views.py", line 89, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask_restful\__init__.py", line 582, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "D:\_Coding\_Work\energy-price-helper\api\app\filehandle\views.py", line 70, in post
+    output = proccesor.generate_statements()
+  File "D:\_Coding\_Work\energy-price-helper\api\app\filehandle\services.py", line 71, in generate_statements
+    print(file)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\docx2pdf\__init__.py", line 106, in convert
+    return windows(paths, keep_active)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\docx2pdf\__init__.py", line 19, in windows
+    word = win32com.client.Dispatch("Word.Application")
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\__init__.py", line 117, in Dispatch
+    dispatch, userName = dynamic._GetGoodDispatchAndUserName(dispatch, userName, clsctx)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\dynamic.py", line 106, in _GetGoodDispatchAndUserName
+    return (_GetGoodDispatch(IDispatch, clsctx), userName)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\dynamic.py", line 88, in _GetGoodDispatch
+    IDispatch = pythoncom.CoCreateInstance(
+pywintypes.com_error: (-2147221008, 'Nebyla volána procedura CoInitialize.', None, None)
+2023-02-06 12:29:07,463 ERROR: Exception on /api/file [POST] [in app.py: 1891]
+Traceback (most recent call last):
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\dynamic.py", line 86, in _GetGoodDispatch
+    IDispatch = pythoncom.connect(IDispatch)
+pywintypes.com_error: (-2147221008, 'Nebyla volána procedura CoInitialize.', None, None)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask_restful\__init__.py", line 467, in wrapper
+    resp = resource(*args, **kwargs)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\views.py", line 89, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask_restful\__init__.py", line 582, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "D:\_Coding\_Work\energy-price-helper\api\app\filehandle\views.py", line 67, in post
+    output_zip_file = proccesor.generate_statements()
+  File "D:\_Coding\_Work\energy-price-helper\api\app\filehandle\services.py", line 85, in generate_statements
+    convert(self.tmp_directory + str(row['eic']) + '.docx', self.tmp_directory + str(row['eic']) + '.pdf')
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\docx2pdf\__init__.py", line 106, in convert
+    return windows(paths, keep_active)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\docx2pdf\__init__.py", line 19, in windows
+    word = win32com.client.Dispatch("Word.Application")
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\__init__.py", line 117, in Dispatch
+    dispatch, userName = dynamic._GetGoodDispatchAndUserName(dispatch, userName, clsctx)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\dynamic.py", line 106, in _GetGoodDispatchAndUserName
+    return (_GetGoodDispatch(IDispatch, clsctx), userName)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\dynamic.py", line 88, in _GetGoodDispatch
+    IDispatch = pythoncom.CoCreateInstance(
+pywintypes.com_error: (-2147221008, 'Nebyla volána procedura CoInitialize.', None, None)
+2023-02-06 12:31:06,785 ERROR: Exception on /api/file [POST] [in app.py: 1891]
+Traceback (most recent call last):
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\dynamic.py", line 86, in _GetGoodDispatch
+    IDispatch = pythoncom.connect(IDispatch)
+pywintypes.com_error: (-2147221008, 'Nebyla volána procedura CoInitialize.', None, None)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask_restful\__init__.py", line 467, in wrapper
+    resp = resource(*args, **kwargs)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask\views.py", line 89, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\flask_restful\__init__.py", line 582, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "D:\_Coding\_Work\energy-price-helper\api\app\filehandle\views.py", line 67, in post
+    output_zip_file = proccesor.generate_statements()
+  File "D:\_Coding\_Work\energy-price-helper\api\app\filehandle\services.py", line 85, in generate_statements
+    convert(self.tmp_directory + str(row['eic']) + '.docx', self.tmp_directory + str(row['eic']) + '.pdf')
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\docx2pdf\__init__.py", line 106, in convert
+    return windows(paths, keep_active)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\docx2pdf\__init__.py", line 19, in windows
+    word = win32com.client.Dispatch("Word.Application")
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\__init__.py", line 117, in Dispatch
+    dispatch, userName = dynamic._GetGoodDispatchAndUserName(dispatch, userName, clsctx)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\dynamic.py", line 106, in _GetGoodDispatchAndUserName
+    return (_GetGoodDispatch(IDispatch, clsctx), userName)
+  File "d:\_coding\_work\energy-price-helper\api\venv\lib\site-packages\win32com\client\dynamic.py", line 88, in _GetGoodDispatch
+    IDispatch = pythoncom.CoCreateInstance(
+pywintypes.com_error: (-2147221008, 'Nebyla volána procedura CoInitialize.', None, None)
