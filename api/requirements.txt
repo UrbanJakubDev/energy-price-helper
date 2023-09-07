@@ -1,5 +1,4 @@
 aniso8601==9.0.1
-appscript==1.2.2
 click==7.1.2
 docx2pdf==0.1.8
 et-xmlfile==1.1.0

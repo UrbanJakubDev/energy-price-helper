@@ -1,12 +1,14 @@
 import time
 
+from app.filehandle.services import StatementGenerator
+
 
 
 def run_scipt():
-    file = "D:\stropovani_cen_data.xlsx"
+    file = "C:/Users/JakubUrban/ČEZ Energo, s.r.o/Jiří Března - Výkazy/stropovani_cen_data.xlsx"
     start = time.time()
     proccesor = StatementGenerator(file)
-    output_zip_file = proccesor.generate_statements()
+    proccesor.generate_statements()
     end = time.time()
     print('Time taken: ' + str(end - start))
 
